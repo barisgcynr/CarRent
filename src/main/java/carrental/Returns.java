@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -127,6 +128,11 @@ public class Returns extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Montserrat ExtraBold", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 153, 0));
         jLabel5.setText("x");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -312,10 +318,16 @@ public class Returns extends javax.swing.JFrame {
     {
         //String CarStatus = "Available";
         try{
-            Con = DriverManager.getConnection("","admin","12345");
+            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             St = Con.createStatement();
             Rs = St.executeQuery("select * from RentTbl");
-            RentTable.setModel(DbUtils.resultSetToTableModel(Rs));
+            while(Rs.next()){
+                int id = Rs.getInt("id");
+                String name = Rs.getString("name");
+                float average = Rs.getFloat("average");
+                boolean active = Rs.getBoolean("active");
+
+            }
         }catch(SQLException e)
         {
             e.printStackTrace();
@@ -326,10 +338,16 @@ public class Returns extends javax.swing.JFrame {
     {
         //String CarStatus = "Available";
         try{
-            Con = DriverManager.getConnection("","admin","12345");
+            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             St = Con.createStatement();
             Rs = St.executeQuery("select * from RentTbl");
-            ReturnTable.setModel(DbUtils.resultSetToTableModel(Rs));
+            while(Rs.next()){
+                int id = Rs.getInt("id");
+                String name = Rs.getString("name");
+                float average = Rs.getFloat("average");
+                boolean active = Rs.getBoolean("active");
+
+            }
         }catch(SQLException e)
         {
             e.printStackTrace();
@@ -339,10 +357,10 @@ public class Returns extends javax.swing.JFrame {
     private void UpdateCar()
     {
         try {
-            Con = DriverManager.getConnection("","admin","12345");
+            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             String Reg= RegNumTb.getText();
             String CarStatus = "Available";
-            String Query= "Update admin.CarTb1 set Status='"+CarStatus+"'where CarReg='"+Reg+"'";
+            String Query= "Update sql11418929.CarTb1 set Status='"+CarStatus+"'where CarReg='"+Reg+"'";
             Statement Add = Con.createStatement();
             Add.executeUpdate(Query);
             //JOptionPane.showMessageDialog(this,"Car Removed Successfully");
@@ -353,8 +371,8 @@ public class Returns extends javax.swing.JFrame {
     private void RemoveFromRent()
     {
         try {
-            Con = DriverManager.getConnection("","admin","12345");
-            String Query= "Delete from admin.RentTbl where RentId="+Rid;
+            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
+            String Query= "Delete from sql11418929.RentTbl where RentId="+Rid;
             Statement Add = Con.createStatement();
             Add.executeUpdate(Query);
             JOptionPane.showMessageDialog(this,"Car Removed From Rented Cars Successfully");
@@ -373,7 +391,7 @@ public class Returns extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Missing information");
         }else{
             try {
-                Con = DriverManager.getConnection("","admin","12345");
+                Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
                 PreparedStatement add = Con.prepareStatement("insert into RentTbl values(?,?,?)");
                 add.setInt(1,Integer.valueOf(ReturnIdTb.getText()));
                 add.setString(2,RegNumTb.getText());
@@ -437,6 +455,10 @@ public class Returns extends javax.swing.JFrame {
         new Login().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel16MouseClicked
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_jLabel5MouseClicked
 
 
     public static void main(String args[]) {

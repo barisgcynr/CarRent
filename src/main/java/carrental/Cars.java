@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -128,6 +129,11 @@ public class Cars extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Montserrat ExtraBold", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 153, 0));
         jLabel5.setText("x");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -345,10 +351,16 @@ public class Cars extends javax.swing.JFrame {
     private void DisplayCars()
     {
         try{
-            Con = DriverManager.getConnection("","admin","12345");
+            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             St = Con.createStatement();
             Rs = St.executeQuery("select * from CarTbl");
-            CarsTable.setModel(DbUtils.resultSetToTableModel(Rs));
+            while(Rs.next()){
+                int id = Rs.getInt("id");
+                String name = Rs.getString("name");
+                float average = Rs.getFloat("average");
+                boolean active = Rs.getBoolean("active");
+
+            }
         }catch(SQLException e)
         {
             e.printStackTrace();
@@ -368,7 +380,7 @@ public class Cars extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Missing information");
         }else{
         try {
-            Con = DriverManager.getConnection("","admin","12345");
+            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             PreparedStatement add = Con.prepareStatement("insert into CarTbl values(?,?,?,?,?)");
             add.setString(1,RegNumTb.getText());
             add.setString(2,BrandTb.getText());
@@ -389,9 +401,9 @@ public class Cars extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Select The Car To be Updated");
         }else{
         try {
-            Con = DriverManager.getConnection("","admin","12345");
+            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             String Reg= RegNumTb.getText();
-            String Query= "Update admin.CarTb1 set Brand='"+BrandTb.getText()+"',Model='"+ModelTb.getText()+"',Status='"+StatusCb.getSelectedItem().toString()+"',Price="+PriceTb.getText()+" where CarReg='"+Reg+"'";
+            String Query= "Update sql11418929.CarTb1 set Brand='"+BrandTb.getText()+"',Model='"+ModelTb.getText()+"',Status='"+StatusCb.getSelectedItem().toString()+"',Price="+PriceTb.getText()+" where CarReg='"+Reg+"'";
             Statement Add = Con.createStatement();
             Add.executeUpdate(Query);
             JOptionPane.showMessageDialog(this,"Car Updated Successfully");
@@ -409,9 +421,9 @@ public class Cars extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Select The Car To be Deleted");
         }else{
         try {
-            Con = DriverManager.getConnection("","admin","12345");
+            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             String Reg= RegNumTb.getText();
-            String Query= "Delete from admin.CarTb1 where CarReg="+Reg+"'";
+            String Query= "Delete from sql11418929.CarTb1 where CarReg="+Reg+"'";
             Statement Add = Con.createStatement();
             Add.executeUpdate(Query);
             JOptionPane.showMessageDialog(this,"Car Deleted Successfully");
@@ -454,7 +466,7 @@ public class Cars extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel7MouseClicked
 
     private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
-        new Return().setVisible(true);
+        new Returns().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel8MouseClicked
 
@@ -462,6 +474,12 @@ public class Cars extends javax.swing.JFrame {
         new Login().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jLabel16MouseClicked
+
+    
+    
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_jLabel5MouseClicked
 
     public static void main(String args[]) {
         

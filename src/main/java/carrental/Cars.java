@@ -8,6 +8,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,9 +20,17 @@ import javax.swing.table.DefaultTableModel;
  * @author barisgucuyener
  */
 public class Cars extends javax.swing.JFrame {
-
-
-    public Cars() {
+    
+    Connection Con;
+    
+    public Cars() throws SQLException {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            String uei = "jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11418929?zeroDateTimeBehavior=CONVERT_TO_NULL";
+            this.Con = DriverManager.getConnection(uei, "sql11418929", "XasvuJM2QP");
+        }catch(Exception ex) {
+            System.out.print(ex);
+        }
         initComponents();
         DisplayCars();
     }
@@ -345,22 +358,19 @@ public class Cars extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    Connection Con = null;
     Statement St = null;
     ResultSet Rs = null;
     private void DisplayCars()
     {
         try{
-            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             St = Con.createStatement();
             Rs = St.executeQuery("select * from CarTbl");
+            List<String> columns = Arrays.asList("ID","CarReg","Brand","Model","Status","Price");
+            List<String[]> values = new ArrayList<>(); 
             while(Rs.next()){
-                int id = Rs.getInt("id");
-                String name = Rs.getString("name");
-                float average = Rs.getFloat("average");
-                boolean active = Rs.getBoolean("active");
-
-            }
+                values.add(new String[] {Rs.getString("ID"),Rs.getString("CarReg"), Rs.getString("Brand"),Rs.getString("Model"),Rs.getString("Status"),Rs.getString("Price")});
+           }
+           CarsTable.setModel(new DefaultTableModel(values.toArray(new Object[][] {}), columns.toArray()));
         }catch(SQLException e)
         {
             e.printStackTrace();
@@ -380,8 +390,7 @@ public class Cars extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Missing information");
         }else{
         try {
-            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
-            PreparedStatement add = Con.prepareStatement("insert into CarTbl values(?,?,?,?,?)");
+            PreparedStatement add = Con.prepareStatement("insert into CarTbl values(?,?,?,?,?, default)");
             add.setString(1,RegNumTb.getText());
             add.setString(2,BrandTb.getText());
             add.setString(3,ModelTb.getText());
@@ -401,9 +410,10 @@ public class Cars extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Select The Car To be Updated");
         }else{
         try {
-            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
+            String ID = CarsTable.getModel().getValueAt(CarsTable.getSelectedRow(), 0).toString();
+                    
             String Reg= RegNumTb.getText();
-            String Query= "Update sql11418929.CarTb1 set Brand='"+BrandTb.getText()+"',Model='"+ModelTb.getText()+"',Status='"+StatusCb.getSelectedItem().toString()+"',Price="+PriceTb.getText()+" where CarReg='"+Reg+"'";
+            String Query= "Update CarTbl set Brand='"+BrandTb.getText()+"',Model='"+ModelTb.getText()+"',Status='"+StatusCb.getSelectedItem().toString()+"',Price="+PriceTb.getText()+" where ID="+ID;
             Statement Add = Con.createStatement();
             Add.executeUpdate(Query);
             JOptionPane.showMessageDialog(this,"Car Updated Successfully");
@@ -421,9 +431,8 @@ public class Cars extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this,"Select The Car To be Deleted");
         }else{
         try {
-            Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             String Reg= RegNumTb.getText();
-            String Query= "Delete from sql11418929.CarTb1 where CarReg="+Reg+"'";
+            String Query= "Delete from CarTbl where CarReg='"+Reg+"'";
             Statement Add = Con.createStatement();
             Add.executeUpdate(Query);
             JOptionPane.showMessageDialog(this,"Car Deleted Successfully");
@@ -485,7 +494,11 @@ public class Cars extends javax.swing.JFrame {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Cars().setVisible(true);
+                try {
+                    new Cars().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Cars.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -517,4 +530,28 @@ public class Cars extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+}
+
+
+class CarModel {
+    private String name;
+    private String price;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+    
+    
 }

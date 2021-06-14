@@ -8,6 +8,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -321,6 +323,7 @@ public class Returns extends javax.swing.JFrame {
             Con = DriverManager.getConnection("http://sql11.freemysqlhosting.net","sql11418929","XasvuJM2QP");
             St = Con.createStatement();
             Rs = St.executeQuery("select * from RentTbl");
+            
             while(Rs.next()){
                 int id = Rs.getInt("id");
                 String name = Rs.getString("name");
@@ -442,7 +445,11 @@ public class Returns extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
-        new Cars().setVisible(true);
+        try {
+            new Cars().setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Returns.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.dispose();
     }//GEN-LAST:event_jLabel7MouseClicked
 

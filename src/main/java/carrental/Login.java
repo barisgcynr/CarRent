@@ -1,6 +1,9 @@
 
 package carrental;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -183,7 +186,11 @@ public class Login extends javax.swing.JFrame {
             UnameTb.setText("");
             PasswordTb.setText("");
         }else if(UnameTb.getText().equals("Admin") && PasswordTb.getText().equals("Password") ){
-            new Cars().setVisible(true);
+            try {
+                new Cars().setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
             this.dispose();
         }else
         {
